@@ -19,7 +19,11 @@ Router.post("/add/:postId", (req,res) => {
     const { postId } = req.params
     const { text , image } = req.body
     const commentId = Math.floor(Math.random() * 10000)
-    const findPostComment = data.comments.findIndex(commentIndex => commentIndex.id == postId)
+    const findPostComment = data.posts.findIndex(userPost=>userPost.postId == postId) 
+
+    console.log(data.posts);
+    console.log(`Post id : ${postId}\nindex : ${findPostComment}`)
+    console.log(`text : ${text}\nimage : ${image}`)
     if (findPostComment != -1) {
         data.comments.push({commentId, postId, text , image })
         fs.writeFileSync(path.resolve(__dirname , "../model/data.json") , JSON.stringify(data))
@@ -32,7 +36,7 @@ Router.post("/add/:postId", (req,res) => {
 Router.put("/update/:commentId", (req,res) => {
     const { commentId } = req.params
     const { text , image } = req.body
-    const findPostComment = data.comments.findIndex(commentIndex => commentIndex.id == commentId)
+    const findPostComment = data.comments.findIndex(commentIndex => commentIndex.commentId == commentId)
     if ( findPostComment != -1 ){
         data.comments[findPostComment].text = text || data.comments[findPostComment].text
         data.comments[findPostComment].image = image || data.comments[findPostComment].image
@@ -45,7 +49,7 @@ Router.put("/update/:commentId", (req,res) => {
 
 Router.delete("/delete/:commentId", (req,res) => {
     const { commentId } = req.params
-    const findPostComment = data.comments.findIndex(commentIndex => commentIndex.id == commentId)
+    const findPostComment = data.comments.findIndex(commentIndex => commentIndex.commentId == commentId)
     if ( findPostComment != -1 ) {
         data.comments.splice(findPostComment,1)
         fs.writeFileSync(path.resolve(__dirname , "../model/data.json") , JSON.stringify(data))
